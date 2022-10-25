@@ -2,8 +2,9 @@ import {commentsRepository} from "../repositories/comments-repository";
 import {CommentType} from "../types/comment-type";
 import {UserDBType} from "../types/user-type";
 import {ContentPageType} from "../types/content-page-type";
-import {commentBDtoCommentType} from "../helperFunctions";
+
 import {paginationContentPage} from "../paginationContentPage";
+import {commentOutputType} from "../dataMapping/toCommentOutputType";
 
 export const commentsService = {
     async createNewComment(postId: string, comment: string, user: UserDBType): Promise<CommentType | null> {
@@ -22,7 +23,7 @@ export const commentsService = {
             return null
         }
 
-        return commentBDtoCommentType(createdComment)
+        return commentOutputType(createdComment)
     },
 
     async updateComment(commentId: string, comment: string): Promise<boolean> {
@@ -52,7 +53,7 @@ export const commentsService = {
             return null
         }
 
-        const comments = commentsDB!.map(c => commentBDtoCommentType(c))
+        const comments = commentsDB!.map(c => commentOutputType(c))
         const totalCount = await commentsRepository.giveTotalCount(userId)
 
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)

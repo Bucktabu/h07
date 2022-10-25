@@ -4,4 +4,5 @@ const loginValidation = body('login').isString().trim().isLength({min: 3, max: 1
 const passwordValidation = body('password').isString().trim().isLength({min: 6, max: 20})
 const emailValidation = body('email').isString().trim().notEmpty().isEmail()
 
-export const bodyUsersRouterValidation = [loginValidation, passwordValidation, emailValidation]
+export const emailValidationForAuthRouter = [emailValidation]
+export const userBodyParemetersValidation = [loginValidation, passwordValidation, emailValidation]

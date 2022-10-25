@@ -4,7 +4,7 @@ import {PostType} from "../types/posts-type";
 import {ContentPageType} from "../types/content-page-type";
 
 import {paginationContentPage} from "../paginationContentPage";
-import {postBDtoPostType} from "../helperFunctions";
+import {postOutputType} from "../dataMapping/toPostOutputType";
 
 export const postsService = {
     async createNewPost(title: string,
@@ -28,7 +28,7 @@ export const postsService = {
             return null
         }
 
-        return postBDtoPostType(createdNewPost)
+        return postOutputType(createdNewPost)
     },
 
     async givePostsPage(sortBy: string,

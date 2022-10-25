@@ -1,12 +1,23 @@
-import {usersCollection} from "./db";
+import {emailConfirmCollection, usersCollection} from "./db";
 import {UserDBType, UsersType} from "../types/user-type";
 import {giveSkipNumber} from "../helperFunctions";
+import {UserAccountDBType} from "../types/user-account-type";
 
 export const usersRepository = {
     async createNewUser(newUser: UserDBType): Promise<UserDBType | null> {
         try {
             await usersCollection.insertOne(newUser)
             return newUser
+        } catch (e) {
+            return null
+        }
+    },
+
+    async createUserAccount(userAccount: UserAccountDBType): Promise<UserAccountDBType | null> {
+        try {
+            await usersCollection.insertOne(userAccount.accountData)
+            await emailConfirmCollection.insertOne(userAccount.emailConfirmation)
+            return userAccount
         } catch (e) {
             return null
         }
@@ -38,12 +49,25 @@ export const usersRepository = {
         return await usersCollection.countDocuments({$or: [{login: {$regex: searchLoginTerm, $options: 'i'}}, {email: {$regex: searchEmailTerm, $options: 'i'}}]})
     },
 
+
     async giveUserById(id: string): Promise<UserDBType | null> {
-        return await usersCollection.findOne({id: id})
+        return await usersCollection.findOne({id})
     },
 
     async giveUserByLogin(login: string) {
-        return await usersCollection.findOne({login: login}) // ругаеся на игнорирование регистра
+        return await usersCollection.findOne({login})
+    },
+
+    async giveUserByConfirmationCode(code: string) {
+        return await emailConfirmCollection
+            .findOne({'emailConfirmation.confirmationCode': code})
+    },
+
+    async updateConfirmation(id: string) {
+        let result = await emailConfirmCollection
+            .updateOne({id}, {$set: {'isConfirmed': true}})
+
+        return result.modifiedCount === 1
     },
 
     async deleteUserById(userId: string): Promise<boolean> {

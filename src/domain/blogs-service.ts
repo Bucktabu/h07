@@ -2,7 +2,7 @@ import {blogsRepository} from "../repositories/blogs-repository";
 import {BlogType} from "../types/blogs-type";
 import {ContentPageType} from "../types/content-page-type";
 import {paginationContentPage} from "../paginationContentPage";
-import {blogDBtoBlogType} from "../helperFunctions";
+import {blogOutputType} from "../dataMapping/toBlogOutputType";
 
 export const blogsService = {
     async createNewBlog(name: string, youtubeUrl: string): Promise<BlogType | null> {
@@ -20,7 +20,7 @@ export const blogsService = {
             return null
         }
 
-        return blogDBtoBlogType(createdBlog)
+        return blogOutputType(createdBlog)
     },
 
     async giveBlogsPage(searchNameTerm: string,
