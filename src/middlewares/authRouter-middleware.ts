@@ -6,6 +6,5 @@ import {emailValidationForAuthRouter,
 
 export const getAuthRouterMiddleware = [authentication]
 export const postAuthRouterMiddleware = [...bodyAuthRouterValidation, inputValidation]
-export const postRegistrationMiddleware = [...userBodyParemetersValidation]
-//export const postConfirmRegistrationMiddleware = [confirmRegistrationValidation]
+export const postRegistrationMiddleware = [...userBodyParemetersValidation, inputValidation]
 export const postResendingRegistrationEmailMiddleware = [...emailValidationForAuthRouter, inputValidation]

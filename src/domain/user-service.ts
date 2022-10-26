@@ -64,7 +64,7 @@ export const usersService = {
         }
 
         const passwordEqual = await bcrypt.compare(password, user.passwordHash)
-        console.log('passwordEqual', passwordEqual)
+
         if (!passwordEqual) {
             return null
         }

@@ -6,7 +6,6 @@ import {getAuthRouterMiddleware,
         postAuthRouterMiddleware,
         postRegistrationMiddleware,
         postResendingRegistrationEmailMiddleware} from "../middlewares/authRouter-middleware";
-import {emailConfirmationRepository} from "../repositories/emailConfirmation-repository";
 
 export const authRouter = Router({})
 
@@ -32,7 +31,7 @@ authRouter.post('/registration',
 
         const result = await authService.createUser(req.body.login, req.body.password, req.body.email)
 
-        return res.status(204).send(result)
+        return res.status(204).send({result})
     }
 )
 
@@ -42,10 +41,10 @@ authRouter.post('/registration-confirmation',
         const emailConfirmed = await authService.confirmEmail(req.body.code)
 
         if (!emailConfirmed) {
-            return res.sendStatus(400)
+            return res.status(400).send({errorsMessages: [{ message: 'Bad Request', field: "code" }]})
         }
 
-        return res.status(204).send(emailConfirmed)
+        return res.status(204).send({emailConfirmed})
     }
 )
 
@@ -59,7 +58,7 @@ authRouter.post('/registration-email-resending',
             return res.sendStatus(400)
         }
 
-        return res.status(204).send(result)
+        return res.status(204).send({result})
     }
 )
 
@@ -68,6 +67,6 @@ authRouter.get('/me',
     async (req: Request, res: Response) => {
         const aboutMe = usersService.aboutMe(req.user!)
 
-        return res.status(200).send(aboutMe)
+        return res.status(200).send({aboutMe})
     }
 )
