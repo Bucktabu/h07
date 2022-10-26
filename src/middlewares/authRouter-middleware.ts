@@ -7,5 +7,5 @@ import {loginOrEmailExistValidation} from "./validation-middleware/loginOrEmailE
 
 export const getAuthRouterMiddleware = [authentication]
 export const postAuthRouterMiddleware = [userLoginValidation, userPasswordValidation, inputValidation]
-export const postRegistrationMiddleware = [userLoginValidation, userPasswordValidation, userEmailValidation, loginOrEmailExistValidation, inputValidation]
+export const postRegistrationMiddleware = [userLoginValidation, userPasswordValidation, userEmailValidation, inputValidation, loginOrEmailExistValidation]
 export const postResendingRegistrationEmailMiddleware = [userEmailValidation, inputValidation]
