@@ -26,7 +26,7 @@ authRouter.post('/login',
 )
 
 authRouter.post('/registration',
-    postRegistrationMiddleware,
+    ...postRegistrationMiddleware,
     async (req: Request, res: Response) => {
 
         const result = await authService.createUser(req.body.login, req.body.password, req.body.email)
