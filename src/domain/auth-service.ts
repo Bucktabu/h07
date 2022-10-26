@@ -68,7 +68,7 @@ export const authService = {
         const emailConfirmation = await this.giveEmailConfirmationByCodeOrId(user.id)
 
         const userAccount = {accountData: user!, emailConfirmation: emailConfirmation!}
-        return emailsManager.sendConfirmationEmail(userAccount)
+        return await emailsManager.sendConfirmationEmail(userAccount)
     },
 
     async createUserAccount(userAccount: UserAccountType) {
