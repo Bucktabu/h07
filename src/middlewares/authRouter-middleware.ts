@@ -5,6 +5,6 @@ import {userEmailValidation,
         userPasswordValidation} from "./validation-middleware/userRouter-validation";
 
 export const getAuthRouterMiddleware = [authentication]
-export const postAuthRouterMiddleware = [userLoginValidation, userPasswordValidation, userEmailValidation, inputValidation]
+export const postAuthRouterMiddleware = [userLoginValidation, userPasswordValidation, inputValidation]
 export const postRegistrationMiddleware = [userLoginValidation, userPasswordValidation, userEmailValidation, inputValidation]
 export const postResendingRegistrationEmailMiddleware = [userEmailValidation, inputValidation]
