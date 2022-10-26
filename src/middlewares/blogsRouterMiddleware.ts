@@ -7,7 +7,7 @@ import {queryValidation,
 
 export const createPostForBlogsRouterMiddleware = [authenticationGuard, ...bodyPostValidationForBlogsRouter, inputValidation]
 export const deleteBlogsRouterMiddleware = [authenticationGuard]
-export const getBlogsRouterMiddleware = [...queryWithNameTermValidation]
-export const getPostForBlogsRouterMiddleware = [...queryValidation]
+export const getBlogsRouterMiddleware = [...queryWithNameTermValidation, inputValidation]
+export const getPostForBlogsRouterMiddleware = [...queryValidation, inputValidation]
 export const postBlogsRouterMiddleware = [authenticationGuard, ...bodyBlogValidation, inputValidation]
 export const putBlogsRouterMiddleware = [authenticationGuard, ...bodyBlogValidation, inputValidation]

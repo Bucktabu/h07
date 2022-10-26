@@ -4,5 +4,5 @@ import {inputValidation} from "./validation-middleware/input-validation";
 import {usersQueryValidationMiddleware} from "./validation-middleware/query-validation";
 
 export const deleteUsersRouter = [authenticationGuard]
-export const getUsersRouterMiddleware = [...usersQueryValidationMiddleware]
+export const getUsersRouterMiddleware = [...usersQueryValidationMiddleware, inputValidation]
 export const postUsersRouterMiddleware = [authenticationGuard, ...userBodyParemetersValidation, inputValidation]

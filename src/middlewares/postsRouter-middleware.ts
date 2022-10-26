@@ -7,5 +7,5 @@ import {queryValidation} from "./validation-middleware/query-validation";
 
 export const createCommentForPostsRouterMiddleware = [authentication, commentsValidation, inputValidation]
 export const deletePostsRouterMiddleware = [authenticationGuard]
-export const getPostsRouterMiddleware = [...queryValidation]
+export const getPostsRouterMiddleware = [...queryValidation, inputValidation]
 export const postsRouterMiddleware = [authenticationGuard, ...bodyPostValidationForPostsRouter, inputValidation]
