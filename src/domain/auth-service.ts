@@ -84,15 +84,11 @@ export const authService = {
     async giveEmailConfirmationByCodeOrId(codeOrId: string) {
         const emailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(codeOrId)
 
-        if (!emailConfirmation) {
+        if (emailConfirmation!.expirationDate < new Date()) {
             return null
         }
 
-        if (emailConfirmation.expirationDate < new Date()) {
-            return null
-        }
-
-        if (emailConfirmation.isConfirmed) {
+        if (emailConfirmation!.isConfirmed) {
             return null
         }
 
