@@ -17,7 +17,6 @@ export const emailAdapters = {
             html: messege
         })
 
-        console.log(info)
         return info
     }
 }

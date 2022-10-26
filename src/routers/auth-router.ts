@@ -48,7 +48,7 @@ authRouter.post('/registration-confirmation',
     }
 )
 
-authRouter.post('/registration-email-resending',
+authRouter.post('/registration-email-resending', // попробовать создать другой код и отправить его в письме
     ...postResendingRegistrationEmailMiddleware,
     async (req: Request, res: Response) => {
 
