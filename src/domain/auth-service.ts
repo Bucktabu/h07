@@ -51,10 +51,9 @@ export const authService = {
         const emailConfirmation = await this.giveEmailConfirmationByCodeOrId(code)
 
         if (!emailConfirmation) {
-            console.log('emailConfirmation: ', false)
             return false
         }
-        console.log('emailConfirmation: ', true)
+
         return await emailConfirmationRepository.updateConfirmation(code)
     },
 
