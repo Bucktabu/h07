@@ -4,15 +4,14 @@ import {URIParameters} from "../../models/URIParameters";
 import {RequestWithParamsAndQuery} from "../../types/request-types";
 import {QueryParameters} from "../../models/queryParameters";
 
-const sortByValidation = (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
-                          res: Response,
-                          next: NextFunction) => {
+export const sortByValidation = (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
+                                 res: Response, next: NextFunction) => {
 
     const sortParameters = Object.values(SortParameters)
     const sortBy = req.query.sortBy
 
     if (!sortBy) {
-        req.query.sortBy = SortParameters.CreatedAt // 'createdAt'
+        req.query.sortBy = SortParameters.CreatedAt
     }
 
     if (!sortParameters.includes(sortBy as SortParameters)) {
@@ -22,9 +21,8 @@ const sortByValidation = (req: RequestWithParamsAndQuery<URIParameters, QueryPar
     next()
 }
 
-const sortDirectionValidation = (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
-                                 res: Response,
-                                 next: NextFunction) => {
+export const sortDirectionValidation = (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
+                                        res: Response, next: NextFunction) => {
 
     const sortDirections = Object.values(SortDirection)
     const sortDirection = req.query.sortDirection
@@ -40,8 +38,8 @@ const sortDirectionValidation = (req: RequestWithParamsAndQuery<URIParameters, Q
     next()
 }
 
-const pageNumberValidation = (req: Request<{}, {}, {}, {pageNumber: string}>,
-                              res: Response, next: NextFunction) => {
+export const pageNumberValidation = (req: Request<{}, {}, {}, {pageNumber: string}>,
+                                     res: Response, next: NextFunction) => {
 
     const pageNumber = req.query.pageNumber
 
@@ -60,8 +58,8 @@ const pageNumberValidation = (req: Request<{}, {}, {}, {pageNumber: string}>,
     next()
 }
 
-const pageSizeValidation = (req: Request<{}, {}, {}, {pageSize: string}>,
-                            res: Response, next: NextFunction) => {
+export const pageSizeValidation = (req: Request<{}, {}, {}, {pageSize: string}>,
+                                   res: Response, next: NextFunction) => {
 
     const pageSize = req.query.pageSize
 
@@ -80,8 +78,8 @@ const pageSizeValidation = (req: Request<{}, {}, {}, {pageSize: string}>,
     next()
 }
 
-const searchNameTermValidation = ((req: Request<{}, {}, {}, {searchNameTerm: string}>,
-                                   res: Response, next: NextFunction) => {
+export const searchNameTermValidation = ((req: Request<{}, {}, {}, {searchNameTerm: string}>,
+                                          res: Response, next: NextFunction) => {
 
     if (!req.query.searchNameTerm) {
         req.query.searchNameTerm = ''
@@ -92,8 +90,8 @@ const searchNameTermValidation = ((req: Request<{}, {}, {}, {searchNameTerm: str
     next()
 })
 
-const searchLoginTermValidation = ((req: Request<{}, {}, {}, {searchLoginTerm: string}>,
-                                    res: Response, next: NextFunction) => {
+export const searchLoginTermValidation = ((req: Request<{}, {}, {}, {searchLoginTerm: string}>,
+                                           res: Response, next: NextFunction) => {
 
     if (!req.query.searchLoginTerm) {
         req.query.searchLoginTerm = ''
@@ -104,8 +102,8 @@ const searchLoginTermValidation = ((req: Request<{}, {}, {}, {searchLoginTerm: s
     next()
 })
 
-const searchEmailTermValidation = ((req: Request<{}, {}, {}, {searchEmailTerm: string}>,
-                                   res: Response, next: NextFunction) => {
+export const searchEmailTermValidation = ((req: Request<{}, {}, {}, {searchEmailTerm: string}>,
+                                           res: Response, next: NextFunction) => {
 
     if (!req.query.searchEmailTerm) {
         req.query.searchEmailTerm = ''
@@ -115,7 +113,3 @@ const searchEmailTermValidation = ((req: Request<{}, {}, {}, {searchEmailTerm: s
 
     next()
 })
-
-export const queryValidation = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation]
-export const queryWithNameTermValidation = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, searchNameTermValidation]
-export const usersQueryValidationMiddleware = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, searchEmailTermValidation, searchLoginTermValidation]

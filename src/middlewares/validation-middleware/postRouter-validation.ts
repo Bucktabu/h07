@@ -1,9 +1,9 @@
 import {body} from "express-validator";
 import {blogsRepository} from "../../repositories/blogs-repository";
 
-const titleValidation = body('title').isString().trim().isLength({min: 3, max: 30})
-const shortDescriptionValidation = body('shortDescription').isString().trim().isLength({min: 3, max: 100})
-const contentValidation = body('content').isString().trim().isLength(({min: 3, max: 1000}))
+export const titleValidation = body('title').isString().trim().isLength({min: 3, max: 30})
+export const shortDescriptionValidation = body('shortDescription').isString().trim().isLength({min: 3, max: 100})
+export const contentValidation = body('content').isString().trim().isLength(({min: 3, max: 1000}))
 
 export const blogIdValidation = body('blogId').isString()
     .custom(async (id: string) => {
@@ -16,5 +16,4 @@ export const blogIdValidation = body('blogId').isString()
         return true
     })
 
-export const bodyPostValidationForBlogsRouter = [titleValidation, shortDescriptionValidation, contentValidation]
 export const bodyPostValidationForPostsRouter = [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation]
