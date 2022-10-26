@@ -11,7 +11,7 @@ export const emailAdapters = {
         })
 
         let info = await transport.sendMail({
-            from: 'Stanislav <buckstabu030194@gmail.com>',
+            from: 'MyBack-End <buckstabu030194@gmail.com>',
             to: email,
             subject: subject,
             html: messege

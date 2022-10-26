@@ -6,7 +6,6 @@ import {emailsManager} from "../managers/email-manager";
 import {UserAccountType} from "../types/user-account-type";
 import {_generateHash} from "../helperFunctions";
 import {emailConfirmationRepository} from "../repositories/emailConfirmation-repository";
-import {log} from "util";
 
 export const authService = {
     async createUser(login: string, password: string, email: string) {
@@ -28,15 +27,16 @@ export const authService = {
                 id: userAccountId,
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {
-                    hours: 1,
+                    hours: 24,
                     // minutes: 1,
                     // seconds: 1
                 }),
                 isConfirmed: false
             }
         }
-        console.log('user', userAccount.accountData)
-        console.log('email', userAccount.emailConfirmation)
+
+        console.log('confirmationCode:', userAccount.emailConfirmation.confirmationCode)
+
         const createdAccount = await this.createUserAccount(userAccount)
 
         if (!createdAccount) {
@@ -74,11 +74,9 @@ export const authService = {
 
     async createUserAccount(userAccount: UserAccountType) {
         const user = await usersRepository.createNewUser(userAccount.accountData)
-        console.log('user', user)
         const emailConfirmation = await emailConfirmationRepository.createEmailConfirmation(userAccount.emailConfirmation)
-        console.log('emailConfirmation', emailConfirmation)
+
         if (!user || !emailConfirmation) {
-            console.log('createUserAccount - created fail')
             return null
         }
 

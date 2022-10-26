@@ -3,8 +3,7 @@ import {emailConfirmationRepository} from "../../repositories/emailConfirmation-
 
 export const confirmRegistrationValidation = async (req: Request, res: Response, next: NextFunction) => {
     const emailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(req.body.code)
-
-
+    console.log(emailConfirmation)
     if (!emailConfirmation) {
         res.sendStatus(400)
     }
