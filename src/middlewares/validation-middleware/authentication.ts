@@ -16,6 +16,7 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
     if (!userId) {
         return res.sendStatus(401)
     }
+
     const user: any = await usersService.giveUserById(userId)
 
     req.user = user

@@ -2,12 +2,11 @@ import {Request, Response, Router} from "express";
 import {authService} from "../domain/auth-service";
 import {jwsService} from "../application/jws-service";
 import {usersService} from "../domain/user-service";
-import {
-    getAuthRouterMiddleware,
-    postAuthRouterMiddleware,
-    postConfirmRegistrationMiddleware,
-    postRegistrationMiddleware, postResendingRegistrationEmailMiddleware
-} from "../middlewares/authRouter-middleware";
+import {getAuthRouterMiddleware,
+        postAuthRouterMiddleware,
+        postConfirmRegistrationMiddleware,
+        postRegistrationMiddleware,
+        postResendingRegistrationEmailMiddleware} from "../middlewares/authRouter-middleware";
 
 export const authRouter = Router({})
 
@@ -33,10 +32,6 @@ authRouter.post('/registration',
 
         const result = await authService.createUser(req.body.login, req.body.password, req.body.email)
 
-        if (!result!.userAccount) {
-            return res.sendStatus(404)
-        }
-
         return res.status(204).send(result)
     }
 )
@@ -44,17 +39,25 @@ authRouter.post('/registration',
 authRouter.post('/registration-confirmation',
     postConfirmRegistrationMiddleware,
     async (req: Request, res: Response) => {
+        const code = await authService.confirmEmail(req.body.code)
 
-    const code = await authService.confirmEmail(req.body.code, req.body.emailConfirmation)
-
-    return res.status(204).send(code)
-})
+        return res.status(204).send(code)
+    }
+)
 
 authRouter.post('/registration-email-resending',
     ...postResendingRegistrationEmailMiddleware,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
 
-})
+        const result = await authService.resendConfirmRegistration(req.body.email)
+
+        if (!result) {
+            return res.sendStatus(400)
+        }
+
+        return res.status(204).send(result)
+    }
+)
 
 authRouter.get('/me',
     getAuthRouterMiddleware,

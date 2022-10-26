@@ -1,16 +1,20 @@
 import {NextFunction, Request, Response} from "express";
-import {usersRepository} from "../../repositories/users-repository";
+import {emailConfirmationRepository} from "../../repositories/emailConfirmation-repository";
 
-export const confirmRegistrationValidation = async  (req: Request, res: Response, next: NextFunction) => {
-    const emailConfirmation = await usersRepository.giveUserByConfirmationCode(req.body.code)
+export const confirmRegistrationValidation = async (req: Request, res: Response, next: NextFunction) => {
+    const emailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(req.body.code)
+
 
     if (!emailConfirmation) {
-        return res.sendStatus(400)
+        res.sendStatus(400)
     }
 
-    req.body.emailConfirmation = {
-        id: emailConfirmation.id,
-        expirationDate: emailConfirmation.expirationDate
+    if (emailConfirmation!.expirationDate < new Date()) {
+        res.sendStatus(400)
+    }
+
+    if (emailConfirmation!.isConfirmed) {
+        res.sendStatus(400)
     }
 
     next()

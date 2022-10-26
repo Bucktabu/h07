@@ -6,7 +6,7 @@ import {CommentBDType} from "../types/comment-type";
 import {MongoClient} from 'mongodb';
 import {PostType} from "../types/posts-type";
 import {UserDBType} from "../types/user-type";
-import {UserAccountDBType} from "../types/user-account-type";
+import {UserAccountType} from "../types/user-account-type";
 import {EmailConfirmationType} from "../types/email-confirmation-type";
 
 const mongoUri = process.env.MONGO_URI || 'mongodb://0.0.0.0:27017/?maxPoolSize=20&w=majority';

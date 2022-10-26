@@ -14,3 +14,6 @@ export const _generateHash = async (password: string, salt: string) => {
     return await bcrypt.hash(password, salt)
 }
 
+// export const _generateHashWithoutSalt = async (password: string) => {
+//     const hash = bcrypt.hashSync(password, 10);
+// }

@@ -1,0 +1,24 @@
+import {emailConfirmCollection} from "./db";
+import {EmailConfirmationType} from "../types/email-confirmation-type";
+
+export const emailConfirmationRepository = {
+    async createEmailConfirmation(emailConfirmation: EmailConfirmationType) {
+        try {
+            return await emailConfirmCollection.insertOne(emailConfirmation)
+        } catch (e) {
+            return null
+        }
+    },
+
+    async giveEmailConfirmationByCodeOrId(codeOrId: string) {
+        return await emailConfirmCollection
+            .findOne({$or: [{'emailConfirmation.confirmationCode': codeOrId}, {id: codeOrId}]})
+    },
+
+    async updateConfirmation(code: string) {
+        let result = await emailConfirmCollection
+            .updateOne({'emailConfirmation.confirmationCode': code}, {$set: {'isConfirmed': true}})
+
+        return result.modifiedCount === 1
+    }
+}

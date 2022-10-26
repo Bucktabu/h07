@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import {usersRepository} from "../repositories/users-repository";
-import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from 'uuid';
 import add from "date-fns/add";
 import {emailsManager} from "../managers/email-manager";
-import {UserAccountDBType} from "../types/user-account-type";
+import {UserAccountType} from "../types/user-account-type";
 import {_generateHash} from "../helperFunctions";
-import any = jasmine.any;
+import {emailConfirmationRepository} from "../repositories/emailConfirmation-repository";
+import {log} from "util";
 
 export const authService = {
     async createUser(login: string, password: string, email: string) {
@@ -15,9 +15,7 @@ export const authService = {
         const passwordHash = await _generateHash(password, passwordSalt)
         const userAccountId = uuidv4()
 
-        const userAccount: UserAccountDBType = {
-            _id: new ObjectId(),
-            id: userAccountId,
+        const userAccount: UserAccountType = {
             accountData: {
                 id: userAccountId,
                 login,
@@ -37,8 +35,9 @@ export const authService = {
                 isConfirmed: false
             }
         }
-
-        const createdAccount = await usersRepository.createUserAccount(userAccount)
+        console.log('user', userAccount.accountData)
+        console.log('email', userAccount.emailConfirmation)
+        const createdAccount = await this.createUserAccount(userAccount)
 
         if (!createdAccount) {
             return null
@@ -48,12 +47,41 @@ export const authService = {
         return {userAccount: createdAccount, info}
     },
 
-    async confirmEmail(code: string, emailConfirmation: any): Promise<boolean> {
+    async confirmEmail(code: string): Promise<boolean> {
+        return await emailConfirmationRepository.updateConfirmation(code)
+    },
 
-        if (emailConfirmation.expirationDate < new Date()) {
-            return false
+    async resendConfirmRegistration(email: string) {
+        const user = await usersRepository.giveUserByLoginOrEmail(email)
+
+        if (!user) {
+            return null
         }
 
-        return await usersRepository.updateConfirmation(emailConfirmation.id)
+        const emailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(user.id)
+
+        if (emailConfirmation!.expirationDate < new Date()) {
+            return null
+        }
+
+        if (emailConfirmation!.isConfirmed) {
+            return null
+        }
+
+        const userAccount = {accountData: user!, emailConfirmation: emailConfirmation!}
+        return emailsManager.sendConfirmationEmail(userAccount)
+    },
+
+    async createUserAccount(userAccount: UserAccountType) {
+        const user = await usersRepository.createNewUser(userAccount.accountData)
+        console.log('user', user)
+        const emailConfirmation = await emailConfirmationRepository.createEmailConfirmation(userAccount.emailConfirmation)
+        console.log('emailConfirmation', emailConfirmation)
+        if (!user || !emailConfirmation) {
+            console.log('createUserAccount - created fail')
+            return null
+        }
+
+        return {accountData: user, emailConfirmation: emailConfirmation}
     }
 }
