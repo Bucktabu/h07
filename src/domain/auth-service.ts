@@ -48,6 +48,13 @@ export const authService = {
     },
 
     async confirmEmail(code: string): Promise<boolean> {
+        const emailConfirmation = await this.giveEmailConfirmationByCodeOrId(code)
+
+        if (!emailConfirmation) {
+            console.log('emailConfirmation: ', false)
+            return false
+        }
+        console.log('emailConfirmation: ', true)
         return await emailConfirmationRepository.updateConfirmation(code)
     },
 
@@ -58,15 +65,7 @@ export const authService = {
             return null
         }
 
-        const emailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(user.id)
-
-        if (emailConfirmation!.expirationDate < new Date()) {
-            return null
-        }
-
-        if (emailConfirmation!.isConfirmed) {
-            return null
-        }
+        const emailConfirmation = await this.giveEmailConfirmationByCodeOrId(user.id)
 
         const userAccount = {accountData: user!, emailConfirmation: emailConfirmation!}
         return emailsManager.sendConfirmationEmail(userAccount)
@@ -81,5 +80,19 @@ export const authService = {
         }
 
         return {accountData: user, emailConfirmation: emailConfirmation}
+    },
+
+    async giveEmailConfirmationByCodeOrId(codeOrId: string) {
+        const emailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(codeOrId)
+
+        if (emailConfirmation!.expirationDate < new Date()) {
+            return null
+        }
+
+        if (emailConfirmation!.isConfirmed) {
+            return null
+        }
+
+        return emailConfirmation
     }
 }

@@ -1,5 +1,6 @@
 import {emailConfirmCollection, usersCollection} from "./db";
 import {EmailConfirmationType} from "../types/email-confirmation-type";
+import {emailsManager} from "../managers/email-manager";
 
 export const emailConfirmationRepository = {
     async createEmailConfirmation(emailConfirmation: EmailConfirmationType) {
@@ -10,14 +11,14 @@ export const emailConfirmationRepository = {
         }
     },
 
-    async giveEmailConfirmationByCodeOrId(codeOrId: string) {
+    async giveEmailConfirmationByCodeOrId(codeOrId: string): Promise<EmailConfirmationType | null> {
         return await emailConfirmCollection
-            .findOne({$or: [{'emailConfirmation.confirmationCode': codeOrId}, {id: codeOrId}]})
+            .findOne({$or: [{confirmationCode: codeOrId}, {id: codeOrId}]})
     },
 
     async updateConfirmation(code: string) {
         let result = await emailConfirmCollection
-            .updateOne({'emailConfirmation.confirmationCode': code}, {$set: {'isConfirmed': true}})
+            .updateOne({confirmationCode: code}, {$set: {isConfirmed: true}})
 
         return result.modifiedCount === 1
     },

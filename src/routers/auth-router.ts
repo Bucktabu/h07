@@ -4,9 +4,9 @@ import {jwsService} from "../application/jws-service";
 import {usersService} from "../domain/user-service";
 import {getAuthRouterMiddleware,
         postAuthRouterMiddleware,
-        postConfirmRegistrationMiddleware,
         postRegistrationMiddleware,
         postResendingRegistrationEmailMiddleware} from "../middlewares/authRouter-middleware";
+import {emailConfirmationRepository} from "../repositories/emailConfirmation-repository";
 
 export const authRouter = Router({})
 
@@ -37,11 +37,15 @@ authRouter.post('/registration',
 )
 
 authRouter.post('/registration-confirmation',
-    postConfirmRegistrationMiddleware,
     async (req: Request, res: Response) => {
-        const code = await authService.confirmEmail(req.body.code)
 
-        return res.status(204).send(code)
+        const emailConfirmed = await authService.confirmEmail(req.body.code)
+
+        if (!emailConfirmed) {
+            return res.sendStatus(400)
+        }
+
+        return res.status(204).send(emailConfirmed)
     }
 )
 
