@@ -46,20 +46,4 @@ export const confirmationCodeValidation = body('code').isString().trim()
     }
 )
 
-export const resendingEmailValidation = body('email').isString().trim().isEmail()
-    .custom(async (email: string) => {
-        const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(email)
-
-        if (!userEmailConfirmation) {
-            throw new Error('User with this email not exists')
-        }
-
-        if (userEmailConfirmation.isConfirmed) {
-            throw new Error('Your account is already verified')
-        }
-
-        return true
-    }
-)
-
 export const authPasswordValidation = body('password').isString().trim().isLength({min: 6, max: 20})
