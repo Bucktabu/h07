@@ -6,15 +6,15 @@ export const resendingEmailValidation = async (req: Request, res: Response, next
     const user = await usersRepository.giveUserByLoginOrEmail(req.body.email)
 
     if (!user) {
-        throw new Error('User with this email not exists')
+        return res.status(400).send({errorsMessages: [{message: 'User with this email not exists', field: "email"}]})
     }
 
     const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(req.body.email)
 
     if (userEmailConfirmation!.isConfirmed) {
-        throw new Error('Your account is already verified')
+        return res.status(400).send({errorsMessages: [{message: 'Your account is already verified', field: "email"}]})
     }
-    req.body.userAccount = {accountData: user, emailConfirmation: userEmailConfirmation}
 
+    req.body.userAccount = {accountData: user, emailConfirmation: userEmailConfirmation}
     next()
 }
