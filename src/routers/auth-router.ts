@@ -2,10 +2,13 @@ import {Request, Response, Router} from "express";
 import {authService} from "../domain/auth-service";
 import {jwsService} from "../application/jws-service";
 import {usersService} from "../domain/user-service";
-import {getAuthRouterMiddleware,
-        postAuthRouterMiddleware,
-        postRegistrationMiddleware,
-        postResendingRegistrationEmailMiddleware} from "../middlewares/authRouter-middleware";
+import {
+    getAuthRouterMiddleware,
+    postAuthRouterMiddleware, registrationConfirmationMiddleware,
+    registrationMiddleware,
+    resendingRegistrationEmailMiddleware
+} from "../middlewares/authRouter-middleware";
+import {confirmationCodeValidation} from "../middlewares/validation-middleware/authRouter-validation";
 
 export const authRouter = Router({})
 
@@ -26,7 +29,7 @@ authRouter.post('/login',
 )
 
 authRouter.post('/registration',
-    ...postRegistrationMiddleware,
+    ...registrationMiddleware,
     async (req: Request, res: Response) => {
 
         const result = await authService.createUser(req.body.login, req.body.password, req.body.email)
@@ -36,20 +39,21 @@ authRouter.post('/registration',
 )
 
 authRouter.post('/registration-confirmation',
+    registrationConfirmationMiddleware,
     async (req: Request, res: Response) => {
 
         const emailConfirmed = await authService.confirmEmail(req.body.code)
 
         if (!emailConfirmed) {
-            return res.status(400).send({errorsMessages: [{ message: 'Bad Request', field: "code" }]})
+            return res.sendStatus(404)
         }
 
         return res.status(204).send({emailConfirmed})
     }
 )
 
-authRouter.post('/registration-email-resending', // попробовать создать другой код и отправить его в письме
-    ...postResendingRegistrationEmailMiddleware,
+authRouter.post('/registration-email-resending',
+    ...resendingRegistrationEmailMiddleware,
     async (req: Request, res: Response) => {
 
         const result = await authService.resendConfirmRegistration(req.body.email)

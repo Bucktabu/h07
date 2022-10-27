@@ -48,12 +48,6 @@ export const authService = {
     },
 
     async confirmEmail(code: string): Promise<boolean> {
-        const emailConfirmation = await this.giveEmailConfirmationByCodeOrId(code)
-
-        if (!emailConfirmation) {
-            return false
-        }
-
         return await emailConfirmationRepository.updateConfirmation(code)
     },
 
@@ -83,7 +77,8 @@ export const authService = {
     },
 
     async giveEmailConfirmationByCodeOrId(codeOrId: string) {
-        const emailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(codeOrId)
+        const emailConfirmation = await emailConfirmationRepository
+            .giveEmailConfirmationByCodeOrId(codeOrId)
 
         if (!emailConfirmation) {
             return null
