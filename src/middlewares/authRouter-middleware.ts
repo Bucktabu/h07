@@ -6,7 +6,7 @@ import {userEmailValidation,
 import {
         authEmailValidation,
         authLoginValidation,
-        authPasswordValidation, confirmationCodeValidation
+        authPasswordValidation, confirmationCodeValidation, resendingEmailValidation
 } from "./validation-middleware/authRouter-validation";
 //import {loginOrEmailExistValidation} from "./validation-middleware/loginOrEmailExistValidation";
 
@@ -14,4 +14,4 @@ export const getAuthRouterMiddleware = [authentication]
 export const postAuthRouterMiddleware = [userLoginValidation, userPasswordValidation, inputValidation]
 export const registrationMiddleware = [authLoginValidation, authPasswordValidation, authEmailValidation, inputValidation]
 export const registrationConfirmationMiddleware = [confirmationCodeValidation, inputValidation]
-export const resendingRegistrationEmailMiddleware = [authEmailValidation, inputValidation]
+export const resendingRegistrationEmailMiddleware = [resendingEmailValidation, inputValidation]

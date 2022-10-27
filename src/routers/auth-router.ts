@@ -55,12 +55,7 @@ authRouter.post('/registration-confirmation',
 authRouter.post('/registration-email-resending',
     ...resendingRegistrationEmailMiddleware,
     async (req: Request, res: Response) => {
-
         const result = await authService.resendConfirmRegistration(req.body.email)
-
-        if (!result) {
-            return res.sendStatus(400)
-        }
 
         return res.status(204).send({result})
     }
