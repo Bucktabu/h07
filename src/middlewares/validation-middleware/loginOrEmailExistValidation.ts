@@ -43,7 +43,7 @@ export const loginOrEmailExistValidation = async (req: Request, res: Response, n
         error.push('email')
     }
 
-    if (!error) {
+    if (!error.length) {
         next()
     }
 
