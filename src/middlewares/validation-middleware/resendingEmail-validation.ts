@@ -15,5 +15,6 @@ export const resendingEmailValidation = async (req: Request, res: Response, next
         throw new Error('Your account is already verified')
     }
     req.body.userAccount = {accountData: user, emailConfirmation: userEmailConfirmation}
-    return true
+
+    next()
 }
