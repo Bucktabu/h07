@@ -57,7 +57,7 @@ authRouter.post('/registration-email-resending',
     async (req: Request, res: Response) => {
         const result = await authService.resendConfirmRegistration(req.body.email)
 
-        if (result) {
+        if (!result) {
             return res.status(400).send({errorsMessages: [{message: 'User with this email not exists,or your account is already verified', field: "email"}]})
         }
 
