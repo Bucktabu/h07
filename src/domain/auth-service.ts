@@ -58,14 +58,19 @@ export const authService = {
             return null
         }
 
-        const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(user.id)
-        console.log('----- service --> should give emailConfirmation: ', userEmailConfirmation)
-        if (userEmailConfirmation!.isConfirmed) {
+        const newConfirmationCode =  uuidv4()
 
+        const updateCode = await emailConfirmationRepository.updateConfirmationCode(user.id, newConfirmationCode)
+
+        if (!updateCode) {
             return null
         }
 
-        userEmailConfirmation!.confirmationCode = uuidv4()
+        const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(user.id)
+
+        if (userEmailConfirmation!.isConfirmed) {
+            return null
+        }
 
         return await emailsManager.sendConfirmationEmail({accountData: user!, emailConfirmation: userEmailConfirmation!})
     },
