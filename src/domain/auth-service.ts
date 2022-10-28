@@ -43,7 +43,7 @@ export const authService = {
             return null
         }
 
-        await emailsManager.sendConfirmationEmail(userAccount)
+        emailsManager.sendConfirmationEmail(userAccount)
         return {userAccount: createdAccount}
     },
 
