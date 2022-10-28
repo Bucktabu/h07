@@ -43,8 +43,8 @@ export const authService = {
             return null
         }
 
-        emailsManager.sendConfirmationEmail(userAccount)
-        return {userAccount: createdAccount}
+        const info = await emailsManager.sendConfirmationEmail(userAccount)
+        return {userAccount: createdAccount, info}
     },
 
     async confirmEmail(code: string): Promise<boolean> {
@@ -73,7 +73,7 @@ export const authService = {
             return null
         }
 
-        return emailsManager.sendConfirmationEmail({accountData: user!, emailConfirmation: userEmailConfirmation!})
+        return await emailsManager.sendConfirmationEmail({accountData: user!, emailConfirmation: userEmailConfirmation!})
     },
 
     async createUserAccount(userAccount: UserAccountType) {
