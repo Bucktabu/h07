@@ -52,7 +52,6 @@ export const authService = {
     },
 
     async resendConfirmRegistration(userAccount: UserAccountType) {
-
         userAccount.emailConfirmation.confirmationCode = uuidv4()
 
         return await emailsManager.sendConfirmationEmail(userAccount)

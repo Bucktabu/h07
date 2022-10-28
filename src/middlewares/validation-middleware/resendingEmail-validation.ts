@@ -9,7 +9,7 @@ export const resendingEmailValidation = async (req: Request, res: Response, next
         return res.status(400).send({errorsMessages: [{message: 'User with this email not exists', field: "email"}]})
     }
 
-    const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(req.body.email)
+    const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(user.id)
 
     if (userEmailConfirmation!.isConfirmed) {
         return res.status(400).send({errorsMessages: [{message: 'Your account is already verified', field: "email"}]})
