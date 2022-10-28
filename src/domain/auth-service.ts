@@ -43,36 +43,38 @@ export const authService = {
             return null
         }
 
-        const info = await emailsManager.sendConfirmationEmail(userAccount)
-        return {userAccount: createdAccount, info}
+        emailsManager.sendConfirmationEmail(userAccount)
+        return {userAccount: createdAccount}
     },
 
     async confirmEmail(code: string): Promise<boolean> {
         return await emailConfirmationRepository.updateConfirmation(code)
     },
 
-    async resendConfirmRegistration(email: string) {
+    async resendConfirmRegistration(email: string): Promise<boolean> {
         const user = await usersRepository.giveUserByLoginOrEmail(email)
 
         if (!user) {
-            return null
+            return false
         }
 
         const newConfirmationCode =  uuidv4()
-
+        console.log('newConfirmationCode:', newConfirmationCode)
         const updateCode = await emailConfirmationRepository.updateConfirmationCode(user.id, newConfirmationCode)
 
         if (!updateCode) {
-            return null
+            return false
         }
 
         const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(user.id)
+        console.log(userEmailConfirmation!.expirationDate)
 
         if (userEmailConfirmation!.isConfirmed) {
-            return null
+            return false
         }
 
-        return await emailsManager.sendConfirmationEmail({accountData: user!, emailConfirmation: userEmailConfirmation!})
+        emailsManager.sendConfirmationEmail({accountData: user!, emailConfirmation: userEmailConfirmation!})
+        return true
     },
 
     async createUserAccount(userAccount: UserAccountType) {
