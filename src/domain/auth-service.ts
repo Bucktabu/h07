@@ -43,7 +43,7 @@ export const authService = {
             return null
         }
 
-        emailsManager.sendConfirmationEmail(userAccount)
+        await emailsManager.sendConfirmationEmail(userAccount)
         return {userAccount: createdAccount}
     },
 
@@ -51,7 +51,7 @@ export const authService = {
         return await emailConfirmationRepository.updateConfirmation(code)
     },
 
-    async resendConfirmRegistration(email: string): Promise<boolean> {
+    async resendConfirmRegistration(email: string) {
         const user = await usersRepository.giveUserByLoginOrEmail(email)
 
         if (!user) {
@@ -63,18 +63,17 @@ export const authService = {
         const updateCode = await emailConfirmationRepository.updateConfirmationCode(user.id, newConfirmationCode)
 
         if (!updateCode) {
-            return false
+            return null
         }
 
         const userEmailConfirmation = await emailConfirmationRepository.giveEmailConfirmationByCodeOrId(user.id)
         console.log(userEmailConfirmation!.expirationDate)
 
         if (userEmailConfirmation!.isConfirmed) {
-            return false
+            return null
         }
 
-        emailsManager.sendConfirmationEmail({accountData: user!, emailConfirmation: userEmailConfirmation!})
-        return true
+        return emailsManager.sendConfirmationEmail({accountData: user!, emailConfirmation: userEmailConfirmation!})
     },
 
     async createUserAccount(userAccount: UserAccountType) {
