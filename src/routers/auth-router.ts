@@ -55,7 +55,11 @@ authRouter.post('/registration-confirmation',
 authRouter.post('/registration-email-resending',
     ...resendingRegistrationEmailMiddleware,
     async (req: Request, res: Response) => {
-        const result = await authService.resendConfirmRegistration(req.body.userAccount)
+        const result = await authService.resendConfirmRegistration(req.body.email)
+
+        if (result) {
+            return res.status(400).send({errorsMessages: [{message: 'User with this email not exists,or your account is already verified', field: "email"}]})
+        }
 
         return res.status(204).send({result})
     }
